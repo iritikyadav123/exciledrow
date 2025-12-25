@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express"
-import { jwt_token } from "./config";
+import { jwt_token } from "@repo/backend-common/config";
 import * as jwt from 'jsonwebtoken'
 
 
 export const authMiddleware=(req: Request, res:Response, next: NextFunction) => {
+        // @ts-ignore
         const token = req.header["authorization"].split(" ")[1] ?? "";
         try {
             const decoder = jwt.verify(token, jwt_token);

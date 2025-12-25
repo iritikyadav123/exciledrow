@@ -1,0 +1,1 @@
+export const jwt_token =  process.env.JWT_SECRET || "Ritik@123";

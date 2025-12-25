@@ -16,10 +16,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
     "@repo/typescript-config": "workspace:*",
+    "@repo/backend-common": "workspace:*",
     "@types/express": "^5.0.6"
   }
 }

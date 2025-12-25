@@ -1,6 +1,6 @@
-const express = require('express');
-import { Response, Request } from "express";
-import { jwt_token } from "./config";
+import { Request, Response } from "express";
+import express from 'express';
+import  {jwt_token}  from "@repo/backend-common/config";
 import { authMiddleware } from "./middleware";
 
 const app = express();

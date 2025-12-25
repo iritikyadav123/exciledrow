@@ -1,2 +1,0 @@
-export const jwt_token = "Ritik@123";
-
