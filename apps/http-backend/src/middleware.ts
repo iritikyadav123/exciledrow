@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import { jwt_token } from "@repo/backend-common/config";
+const { jwt_token } = require ("@repo/backend-common/config");
 import * as jwt from 'jsonwebtoken'
 
 

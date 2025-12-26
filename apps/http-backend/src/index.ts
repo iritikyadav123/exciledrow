@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import express from 'express';
 import  { jwt_token }  from "@repo/backend-common/config";
-import  {authMiddleware}  from "./middleware.js";
-import {ceateRoomSchema, signinSchema, userSchema} from '@repo/common/types'
+const  {authMiddleware}  = require ("./middleware.js");
+const {ceateRoomSchema, signinSchema, userSchema} = require ('@repo/common/types')
 
 const app = express();
 app.use(express.json());
@@ -15,7 +15,9 @@ app.post('/signup', (req:Request,res:Response) => {
             send : data.error
         })
     }
-    return;
+    return res.status(200).json({
+        msg : "user has been login successfully"
+    })
 
 })
 

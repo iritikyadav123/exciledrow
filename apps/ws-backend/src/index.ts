@@ -1,5 +1,5 @@
 import { WebSocketServer } from 'ws';
-import  jwt from 'jsonwebtoken'
+const jwt = require('jsonwebtoken')
 import  {jwt_token}  from "@repo/backend-common/config";
 
 const wss = new WebSocketServer({ port: 8080 });
