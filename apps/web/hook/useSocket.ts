@@ -1,0 +1,24 @@
+import { useEffect, useState } from "react";
+import { WS_URL } from "../app/config";
+
+export default function useSocket(token: string) {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+
+  useEffect(() => {
+    if (!token) return;
+
+    const ws = new WebSocket(`${WS_URL}?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJlNGQ2MGUxNC05NzhhLTQ1ODgtOTE0My00NjE1YzcyNzc1YjciLCJ1c2VybmFtZSI6ImlyaXRpa3lhZGF2QDEyMyIsImlhdCI6MTc2NjkzNTI4MH0.h-x2EdYpt9oTATxZ1jsV-3QfKcNr3-QJwmRBJDa21JE`);
+
+    ws.onopen = () => {
+      setSocket(ws);
+      setLoading(false);
+    };
+
+  }, [token]);
+
+  return {
+    socket,
+    loading,
+  };
+}
