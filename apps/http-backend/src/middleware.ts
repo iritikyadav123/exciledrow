@@ -1,24 +1,67 @@
-import { NextFunction, Request, Response } from "express"
-const { jwt_token } = require ("@repo/backend-common/config");
-import * as jwt from 'jsonwebtoken'
+import { NextFunction, Request, Response } from "express";
+import { jwt_token } from "@repo/backend-common/config";
+import jwt from 'jsonwebtoken';
 
+// Extend Express Request type to include userId
+declare global {
+    namespace Express {
+        interface Request {
+            userId?: string;
+            username?: string;
+        }
+    }
+}
 
-export const authMiddleware=(req: Request, res:Response, next: NextFunction) => {
-        // @ts-ignore
-        const token = req.header["authorization"].split(" ")[1] ?? "";
-        try {
-            const decoder = jwt.verify(token, jwt_token);
-            if(!decoder) {
-                return res.status(401)
-            }
-            // @ts-ignore
-            req.userId = decoder.userId
-            next()
-
-        }catch(err) {
-            return res.status(500).json({
-                msg : "unable to authorized the user"
-            })
+export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    try {
+        // Get authorization header
+        const authHeader = req.headers.authorization; // Fixed: headers not header
+        
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({
+                msg: "No token provided or invalid format"
+            });
         }
 
-}
+        // Extract token
+        const token = authHeader.split(" ")[1];
+        
+        if (!token) {
+            return res.status(401).json({
+                msg: "No token provided"
+            });
+        }
+
+        // Verify token
+        const decoded = jwt.verify(token, jwt_token) as {
+            userId: string;
+            username: string;
+        };
+
+        // Attach user info to request
+        req.userId = decoded.userId;
+        req.username = decoded.username;
+        
+        next();
+
+    } catch (err: any) {
+        console.error('Auth middleware error:', err);
+        
+        // Handle specific JWT errors
+        if (err.name === 'JsonWebTokenError') {
+            return res.status(401).json({
+                msg: "Invalid token"
+            });
+        }
+        
+        if (err.name === 'TokenExpiredError') {
+            return res.status(401).json({
+                msg: "Token expired"
+            });
+        }
+
+        return res.status(500).json({
+            msg: "Authentication failed"
+        });
+    }
+};
